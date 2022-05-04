@@ -1,3 +1,5 @@
+// Break down and rebuild urls
+
 ccTLDs = {
 	"ac":"Ascension Island (United Kingdom)",
 	"ad":"Andorra",
