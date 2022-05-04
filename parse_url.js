@@ -988,8 +988,14 @@ function parse_url(url) {
     "args":parse_args,
   }
 
+  components = {
+	  "protocol":null,
+	  "domain":null,
+	  "paths":null,
+	  "args":null,
+  }
+
   if (matches){
-    text = "";
     for (id in matches.groups){
       key = id;
       value = matches.groups[id];
@@ -997,9 +1003,9 @@ function parse_url(url) {
         value = parsers[key](value);
       }
       
-      text += `>>> ${key}:${JSON.stringify(value, space=4)}\n`;
+      components[key] = value;
     }
-    return text;
+    return components;
   } else{
     return null;
   }
