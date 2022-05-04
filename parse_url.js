@@ -1009,5 +1009,55 @@ function parse_url(url) {
   } else{
     return null;
   }
+}
 
+
+function build_url(
+	components,
+	protocol=true,
+	args=true,
+	paths=true,
+){
+	// Rebuilds a URL string from components.
+	// Expects a components dict object from parse_url, in form of:
+	// {
+	// 	"protocol":str,
+	// 	"domain":dict,
+	// 	"paths":Array,
+	// 	"args":dict,
+	// }
+	
+	
+	_url = "";
+	if (protocol) {
+		_url += `${components.protocol ? components.protocol : "https"}://`;
+	}
+	
+	// We start from primitives because .list might not have updated
+	_domain_list = components.domain.subdomains;
+	_domain_list.push(components.domain.sld);
+	_domain_list.push(components.domain.tld);
+	_domain_list.push(components.domain.country_tld);
+	_domain_list = _domain_list.filter(n => n); // remove nulls
+	
+	_url += _domain_list.join(".")
+	
+	if (paths && (components.paths ? components.paths.length>0 : false)){
+		_url += "/";
+		_url += components.paths.join("/");
+	}
+
+	if (args && (components.args ? Object.keys(components.args).length>0 : false)) {
+		_url += "?";
+
+		_values = []
+		for (key in components.args){
+			for (value in components.args[key]){
+				_values.push(`${key}=${components.args[key][value]}`);
+			}
+		}
+		_url += _values.join("&");
+	}
+
+	return _url;
 }
